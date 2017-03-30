@@ -1,3 +1,5 @@
-# winesweeper.github.io
+# Winesweeper
+
+Just a Minesweeper in javascript i made
 
 Still in Alpha
