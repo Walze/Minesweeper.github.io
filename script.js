@@ -15,16 +15,15 @@ if (url) {
             cols = 15;
             mineN = 20;
             break;
-
         case 'hard':
             rows = 15;
             cols = 17;
             mineN = 25;
             break;
         case 'custom':
-            rows = url.rows[0];
-            cols = url.cols[0];
-            mineN = url.mineN[0];
+            rows = parseInt(url.rows[0]);
+            cols = parseInt(url.cols[0]);
+            mineN = parseInt(url.mineN[0]);
             break;
     }
 }
@@ -128,15 +127,6 @@ for (var i3 = 0; i3 < mineN; i3++) {
 //dinamic css
 $(".row").css("width", cols * 33);
 
-
-//keypress event
-$(document).keyup(function(e){
-    if(e.keyCode == 75){
-        console.log('key')
-    }
-});
-
-
 var timeoutId = 0;
 var hold = false;
 var cellid = null;
@@ -149,16 +139,18 @@ $(".gridCell").on('mousedown', function() {
         hold = true;
 
         //hold handler
-        if (!Cells[cellid].flag) {
-            Cells[cellid].flag = true;
-            $('[cell-id=' + cellid + ']').css('background', 'black');
+        if (!Cells[cellid].quantumstate) {
+            if (!Cells[cellid].flag) {
+                Cells[cellid].flag = true;
+                $('[cell-id=' + cellid + ']').css('background', 'black');
 
-            Flags.push(cellid);
-        } else {
-            Cells[cellid].flag = false;
-            $('[cell-id=' + cellid + ']').css('background', '#e74c3c');
+                Flags.push(cellid);
+            } else {
+                Cells[cellid].flag = false;
+                $('[cell-id=' + cellid + ']').css('background', '#e74c3c');
 
-            Flags.splice(Flags.indexOf(cellid) ,1);
+                Flags.splice(Flags.indexOf(cellid) ,1);
+            }
         }
     }, 500);
 }).on('mouseup', function() {
@@ -240,9 +232,6 @@ $(".gridCell").on('mousedown', function() {
         alert('GG IZ');
         location.reload();
     }
-
-    console.log(Mines);
-    console.log(Flags);
 });
 
 
