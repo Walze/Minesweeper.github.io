@@ -102,7 +102,7 @@ for (var i3 = 0; i3 < mineN; i3++) {
     var cellN = Math.floor((Math.random() * (rows * cols)));
     Cells[cellN].mine = true;
     //green for mines
-    $('[cell-id=' + cellN + ']').css('background', 'green');
+    //$('[cell-id=' + cellN + ']').css('background', 'green');
     $('[cell-id=' + cellN + ']').attr("mine", true);
 }
 
