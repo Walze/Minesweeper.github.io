@@ -1,0 +1,41 @@
+* {
+    text-align: center;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+#minefield {
+    background: #eee;
+}
+
+.col {
+    width: 66px;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.row {
+    height: 66px;
+    width: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.gridCell {
+    width: 66px;
+    height: 66px;
+    background: #e74c3c;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    border: #2c3e50 solid;
+    box-sizing: border-box;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.gridCell:hover {
+    background: #2980b9;
+}
