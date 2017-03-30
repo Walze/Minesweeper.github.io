@@ -126,7 +126,6 @@
                     </div>
                 `
                 );
-                //console.log("row:" + i + "/" + "col:" + i2);
                 Cells[gridCellId] = new Cell(gridCellId, false, i + 1, i2 + 1, mode);
                 gridCellId++;
             }
@@ -145,7 +144,6 @@
         $(".gridCell").click(function () {
             var cellid = parseInt($(this).attr('cell-id'));
             var mine = $(this).attr('mine');
-            console.log(Cells[cellid]);
 
             // functions?
             function chkCell(id) {
@@ -182,13 +180,10 @@
                             $('[cell-id=' + cell.id + ']').css('background', '#e67e22');
 
                             cell.quantumstate = true;
-                            console.log('if? SPREAD', cell);
                             spread(cell);
                         }
                     } catch (err) {
-                        console.log(err)
                     }
-                    //console.log(countNearMines);
                 }
             }
 
