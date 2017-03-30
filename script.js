@@ -51,25 +51,21 @@ var Cell = function (id, mine, row, col, maxrowcol) {
             this.near.right = false;
             this.near.downright = false;
         }
-
     }
 }
 
 // create grid
 var gridCellId = 0;
-
 var Cells = [];
 
 for (var i = 0; i < mode; i++) {
     $('#minefield').append("<div class='row'>" + "</div>");
     for (var i2 = 0; i2 < mode; i2++) {
-        $('.row').last().append(
-            `
-                    <div class=col>
-                        <span mine=false class=gridCell cell-id=${gridCellId}></span>
-                    </div>
-                `
-        );
+        $('.row').last().append(`
+            <div class=col>
+                <span mine=false class=gridCell cell-id=${gridCellId}></span>
+            </div>
+        `);
         Cells[gridCellId] = new Cell(gridCellId, false, i + 1, i2 + 1, mode);
         gridCellId++;
     }
@@ -93,9 +89,7 @@ $(".gridCell").click(function () {
     function chkCell(id) {
         if (id != false) {
             return Cells[id].mine;
-        } else {
-            return false
-        }
+        } else return false 
     }
 
     function chkNear(cell) {
@@ -103,33 +97,17 @@ $(".gridCell").click(function () {
 
             var countNearMines = 0;
             try {
-                if (chkCell(cell.near.up)) {
-                    countNearMines++;
-                }
-                if (chkCell(cell.near.upright)) {
-                    countNearMines++;
-                }
+                if (chkCell(cell.near.up)) {countNearMines++;}
+                if (chkCell(cell.near.upright)) {countNearMines++;}
 
-                if (chkCell(cell.near.right)) {
-                    countNearMines++;
-                }
-                if (chkCell(cell.near.downright)) {
-                    countNearMines++;
-                }
+                if (chkCell(cell.near.right)) {countNearMines++;}
+                if (chkCell(cell.near.downright)) {countNearMines++;}
 
-                if (chkCell(cell.near.down)) {
-                    countNearMines++;
-                }
-                if (chkCell(cell.near.downleft)) {
-                    countNearMines++;
-                }
+                if (chkCell(cell.near.down)) {countNearMines++;}
+                if (chkCell(cell.near.downleft)) {countNearMines++;}
 
-                if (chkCell(cell.near.left)) {
-                    countNearMines++;
-                }
-                if (chkCell(cell.near.upleft)) {
-                    countNearMines++;
-                }
+                if (chkCell(cell.near.left)) {countNearMines++;}
+                if (chkCell(cell.near.upleft)) {countNearMines++;}
 
                 if (countNearMines > 0 && !cell.quantumstate) {
                     $('[cell-id=' + cell.id + ']').html(countNearMines);
