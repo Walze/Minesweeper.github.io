@@ -3,26 +3,41 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 var url = $url();
 
-url = typeof url != "undefined" ? url.mode[0] : null;
-
+url = typeof url != "undefined" ? url : false;
 var mineN = 15;
 var rows = 10;
 var cols = 10;
 
+if (url) {   
+    switch (url.mode[0]) {
+        case 'medium':
+            rows = 13;
+            cols = 15;
+            mineN = 20;
+            break;
 
-switch (url) {
-    case 'medium':
-        rows = 13;
-        cols = 15;
-        mineN = 20;
-        break;
-
-    case 'hard':
-        rows = 15;
-        cols = 17;
-        mineN = 25;
-        break;
+        case 'hard':
+            rows = 15;
+            cols = 17;
+            mineN = 25;
+            break;
+        case 'custom':
+            rows = url.rows[0];
+            cols = url.cols[0];
+            mineN = url.mineN[0];
+            break;
+    }
 }
+
+$('#btn').click((e) => {
+    e.preventDefault();
+
+    rows = $('#rows').val();
+    cols = $('#cols').val();
+    mineN = $('#mines').val();
+
+    window.location.replace(`?mode=custom&rows=${rows}&cols=${cols}&mineN=${mineN}`);
+});
 
 
 
@@ -150,7 +165,7 @@ $(".gridCell").on('mousedown', function() {
     if (!hold && !Cells[cellid].flag) {
 
         //click handler
-        
+
             //end
             if (Cells[cellid].mine) {
                 alert('rip');
