@@ -53,6 +53,8 @@
     <div id="minefield"></div>
 
     <script>
+        var mineN = 13;
+        var mode = 10;
         // Cell Class
         var Cell = function (id, mine, row, col, maxrowcol) {
             this.id = id;
@@ -112,7 +114,6 @@
         var gridCellId = 0;
 
         var Cells = [];
-        var mode = 10;
 
         for (var i = 0; i < mode; i++) {
             $('#minefield').append("<div class='row'>" + "</div>");
@@ -131,7 +132,6 @@
         }
 
         //placemines
-        var mineN = 20;
         for (var i3 = 0; i3 < mineN; i3++) {
             var cellN = Math.floor((Math.random() * (mode * mode)));
             Cells[cellN].mine = true;
