@@ -1,7 +1,33 @@
+
+
+
+var url = $url();
+
+url = typeof url != "undefined" ? url.mode[0] : null;
+
 var mineN = 13;
-var mode = 10;
+var rows = 10;
+var cols = 10;
+
+
+switch (url) {
+    case 'medium':
+        rows = 13;
+        cols = 15;
+        mineN = 20;
+        break;
+
+    case 'hard':
+        rows = 15;
+        cols = 17;
+        mineN = 25;
+        break;
+}
+
+
+
 // Cell Class
-var Cell = function (id, mine, row, col, maxrowcol) {
+var Cell = function (id, mine, row, col) {
     this.id = id;
     this.mine = mine;
     this.border = 0;
@@ -11,21 +37,21 @@ var Cell = function (id, mine, row, col, maxrowcol) {
         col,
     };
     this.near = {
-        up: this.id - 10,
-        upright: this.id - 9,
+        up: this.id - cols,
+        upright: this.id - (cols - 1),
 
         right: this.id + 1,
-        downright: this.id + 11,
+        downright: this.id + (cols + 1),
 
-        down: this.id + 10,
-        downleft: this.id + 9,
+        down: this.id + cols,
+        downleft: this.id + (cols - 1),
 
         left: this.id - 1,
-        upleft: this.id - 11
+        upleft: this.id - (cols + 1)
     };
 
     //bordercheck
-    if ((row == 1 || row == maxrowcol) || (col == 1 || col == maxrowcol)) {
+    if ((row == 1 || row == rows) || (col == 1 || col == cols)) {
         this.border = 1;
 
         if (row == 1) {
@@ -34,7 +60,7 @@ var Cell = function (id, mine, row, col, maxrowcol) {
             this.near.upright = false;
         }
 
-        if (row == maxrowcol) {
+        if (row == rows) {
             this.near.down = false;
             this.near.downleft = false;
             this.near.downright = false;
@@ -46,7 +72,7 @@ var Cell = function (id, mine, row, col, maxrowcol) {
             this.near.downleft = false;
         }
 
-        if (col == maxrowcol) {
+        if (col == cols) {
             this.near.upright = false;
             this.near.right = false;
             this.near.downright = false;
@@ -58,33 +84,38 @@ var Cell = function (id, mine, row, col, maxrowcol) {
 var gridCellId = 0;
 var Cells = [];
 
-for (var i = 0; i < mode; i++) {
+for (var i = 0; i < rows; i++) {
     $('#minefield').append("<div class='row'>" + "</div>");
-    for (var i2 = 0; i2 < mode; i2++) {
+    for (var i2 = 0; i2 < cols; i2++) {
         $('.row').last().append(`
             <div class=col>
                 <span mine=false class=gridCell cell-id=${gridCellId}></span>
             </div>
         `);
-        Cells[gridCellId] = new Cell(gridCellId, false, i + 1, i2 + 1, mode);
+        Cells[gridCellId] = new Cell(gridCellId, false, i + 1, i2 + 1);
         gridCellId++;
     }
 }
 
 //placemines
 for (var i3 = 0; i3 < mineN; i3++) {
-    var cellN = Math.floor((Math.random() * (mode * mode)));
+    var cellN = Math.floor((Math.random() * (rows * cols)));
     Cells[cellN].mine = true;
     //green for mines
-    //$('[cell-id=' + cellN + ']').css('background', 'green');
+    $('[cell-id=' + cellN + ']').css('background', 'green');
     $('[cell-id=' + cellN + ']').attr("mine", true);
 }
+
+//dinamic css
+$(".row").css("width", cols * 33);
+
+
 
 //click event
 $(".gridCell").click(function () {
     var cellid = parseInt($(this).attr('cell-id'));
     var mine = $(this).attr('mine');
-
+    console.log(Cells[cellid]);
     // functions?
     function chkCell(id) {
         if (id != false) {
@@ -149,3 +180,29 @@ $(".gridCell").click(function () {
         chkNear(Cells[cellid]);
     }
 });
+
+function $GET(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp('&amp;'+q+'=([^&amp;]*)','i');
+    return (s=s.replace(/^\?/,'&amp;').match(re)) ?s=s[1] :s='';
+}
+
+function $url(url = window.location.search) {
+    var queryStart = url.indexOf("?") + 1,
+        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+        query = url.slice(queryStart, queryEnd - 1),
+        pairs = query.replace(/\+/g, " ").split("&"),
+        parms = {}, i, n, v, nv;
+
+    if (query === url || query === "") return;
+
+    for (i = 0; i < pairs.length; i++) {
+        nv = pairs[i].split("=", 2);
+        n = decodeURIComponent(nv[0]);
+        v = decodeURIComponent(nv[1]);
+
+        if (!parms.hasOwnProperty(n)) parms[n] = [];
+        parms[n].push(nv.length === 2 ? v : null);
+    }
+    return parms;
+}
