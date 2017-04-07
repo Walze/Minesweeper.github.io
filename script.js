@@ -1,3 +1,6 @@
+var teste = undefined;
+
+
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 
@@ -8,7 +11,7 @@ var mineN = 15;
 var rows = 10;
 var cols = 10;
 
-if (url) {   
+if (url) {
     switch (url.mode[0]) {
         case 'medium':
             rows = 13;
@@ -120,8 +123,8 @@ for (var i3 = 0; i3 < mineN; i3++) {
     Cells[cellN].mine = true;
     Mines[i3] = Cells[cellN].id;
     //green for mines
-    //$('[cell-id=' + cellN + ']').css('background', 'green');
-    $('[cell-id=' + cellN + ']').attr("mine", true);
+    //$('span[cell-id=' + cellN + ']').css('background', 'green');
+    $('span[cell-id=' + cellN + ']').attr("mine", true);
 }
 
 //dinamic css
@@ -131,98 +134,139 @@ var timeoutId = 0;
 var hold = false;
 var cellid = null;
 
+
+
+
+var calls = 0;
+function iSuspectToBeLoopingInfititely() {
+calls += 1;
+if (calls > 100) { debugger; }
+}
+
+
+// functions?
+function chkCell(id) {
+    if (id !== false && !Cells[id].quantumstate) {
+        return Cells[id].mine;
+    } else return false
+}
+
+
+
+
+function chkNear(cell) {
+    if (cell !== false || typeof cell !== "undefined" || cell != null) {
+
+        try {
+            var countNearMines = 0;
+
+             if (!cell.quantumstate) {   
+                if (chkCell(cell.near.up)) {
+                    countNearMines++;
+                }
+                if (chkCell(cell.near.upright)) {
+                    countNearMines++;
+                }
+
+                if (chkCell(cell.near.right)) {
+                    countNearMines++;
+                }
+                if (chkCell(cell.near.downright)) {
+                    countNearMines++;
+                }
+
+                if (chkCell(cell.near.down)) {
+                    countNearMines++;
+                }
+                if (chkCell(cell.near.downleft)) {
+                    countNearMines++;
+                }
+
+                if (chkCell(cell.near.left)) {
+                    countNearMines++;
+                }
+                if (chkCell(cell.near.upleft)) {
+                    countNearMines++;
+                }
+               
+                if (countNearMines > 0) {
+                    $('span[cell-id=' + cell.id + ']').html(countNearMines);
+                    $('span[cell-id=' + cell.id + ']').css('background', '#3d3a4c');
+                }
+
+                if (countNearMines == 0 && !cell.quantumstate) {
+                    $('span[cell-id=' + cell.id + ']').css('background', '#3d3a4c');
+                    cell.quantumstate = true;
+                    spread(cell);
+
+                }
+
+            }
+
+        } catch (err) {}
+    }
+}
+
+function spread(cell) {
+    if (cell != false || typeof cell !== "undefined" || cell != null) {
+        chkNear(Cells[cell.near.up]);
+        chkNear(Cells[cell.near.upright]);
+
+        chkNear(Cells[cell.near.right]);
+        chkNear(Cells[cell.near.downright]);
+
+        chkNear(Cells[cell.near.down]);
+        chkNear(Cells[cell.near.downleft]);
+
+        chkNear(Cells[cell.near.left]);
+        chkNear(Cells[cell.near.upleft]);
+    }
+}
+
+
+
+
+
+
+
 // hold && click events
-$(".gridCell").on('mousedown', function() {
+$(".gridCell").on('mousedown', function () {
     cellid = parseInt($(this).attr('cell-id'));
 
-    timeoutId = setTimeout( () => {
+    timeoutId = setTimeout(() => {
         hold = true;
 
         //hold handler
         if (!Cells[cellid].quantumstate) {
             if (!Cells[cellid].flag) {
                 Cells[cellid].flag = true;
-                $('[cell-id=' + cellid + ']').css('background', 'black');
+                $('span[cell-id=' + cellid + ']').css('background', 'black');
 
                 Flags.push(cellid);
             } else {
                 Cells[cellid].flag = false;
-                $('[cell-id=' + cellid + ']').css('background', '#e74c3c');
+                $('span[cell-id=' + cellid + ']').css('background', '#e74c3c');
 
-                Flags.splice(Flags.indexOf(cellid) ,1);
+                Flags.splice(Flags.indexOf(cellid), 1);
             }
         }
     }, 500);
-}).on('mouseup', function() {
+}).on('mouseup', function () {
     if (!hold && !Cells[cellid].flag) {
-
+        
         //click handler
+        //end
+        if (Cells[cellid].mine) {
+            alert('rip');
+            location.reload();
+            $('span[cell-id=' + cellid + ']').css('background', '#2ecc71');
+        } else {
+            chkNear(Cells[cellid]);
+        }
+        //var cellid = parseInt($(this).attr('cell-id'));
+        var mine = $(this).attr('mine');
+        console.log(Cells[cellid]);
 
-            //end
-            if (Cells[cellid].mine) {
-                alert('rip');
-                location.reload();
-                $('[cell-id=' + cellid + ']').css('background', '#2ecc71');
-            } else {
-                chkNear(Cells[cellid]);
-            }
-            //var cellid = parseInt($(this).attr('cell-id'));
-            var mine = $(this).attr('mine');
-            console.log(Cells[cellid]);
-            // functions?
-            function chkCell(id) {
-                if (id != false) {
-                    return Cells[id].mine;
-                } else return false 
-            }
-
-            function chkNear(cell) {
-                if (cell != false || typeof cell !== "undefined") {
-
-                    var countNearMines = 0;
-                    try {
-                        if (chkCell(cell.near.up)) {countNearMines++;}
-                        if (chkCell(cell.near.upright)) {countNearMines++;}
-
-                        if (chkCell(cell.near.right)) {countNearMines++;}
-                        if (chkCell(cell.near.downright)) {countNearMines++;}
-
-                        if (chkCell(cell.near.down)) {countNearMines++;}
-                        if (chkCell(cell.near.downleft)) {countNearMines++;}
-
-                        if (chkCell(cell.near.left)) {countNearMines++;}
-                        if (chkCell(cell.near.upleft)) {countNearMines++;}
-
-                        if (countNearMines > 0 && !cell.quantumstate) {
-                            $('[cell-id=' + cell.id + ']').html(countNearMines);
-                            $('[cell-id=' + cell.id + ']').css('background', '#e67e22');
-                        }
-
-                        if (countNearMines == 0 && !cell.quantumstate) {
-                            $('[cell-id=' + cell.id + ']').css('background', '#e67e22');
-
-                            cell.quantumstate = true;
-                            spread(cell);
-                        }
-                    } catch (err) {}
-                }
-            }
-
-            function spread(cell) {
-                if (cell != false || typeof cell !== "undefined") {
-                    chkNear(Cells[cell.near.up]);
-                    chkNear(Cells[cell.near.upright]);
-
-                    chkNear(Cells[cell.near.right]);
-                    chkNear(Cells[cell.near.downright]);
-
-                    chkNear(Cells[cell.near.down]);
-                    chkNear(Cells[cell.near.downleft]);
-
-                    chkNear(Cells[cell.near.left]);
-                    chkNear(Cells[cell.near.upleft]);
-                }
-            }
     }
 
     clearTimeout(timeoutId);
@@ -242,12 +286,26 @@ $(".gridCell").on('mousedown', function() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 function $url(url = window.location.search) {
     var queryStart = url.indexOf("?") + 1,
-        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+        queryEnd = url.indexOf("#") + 1 || url.length + 1,
         query = url.slice(queryStart, queryEnd - 1),
         pairs = query.replace(/\+/g, " ").split("&"),
-        parms = {}, i, n, v, nv;
+        parms = {},
+        i, n, v, nv;
 
     if (query === url || query === "") return;
 
@@ -262,4 +320,4 @@ function $url(url = window.location.search) {
     return parms;
 }
 
-
+console.log(Mines);
