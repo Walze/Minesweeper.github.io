@@ -1,5 +1,3 @@
 # Winesweeper
 
-Just a Minesweeper in javascript i made
-
-Still in Alpha
+Minesweeper game in javascript I made
