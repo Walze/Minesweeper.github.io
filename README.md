@@ -1,3 +1,3 @@
 # Winesweeper
 
-Minesweeper game in javascript I made :)
+Minesweeper game in javascript I made
